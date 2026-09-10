@@ -1,0 +1,44 @@
+name: CI Pipeline - Main
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar todas las dependencias
+        run: npm install
+
+      - name: Escaneo de vulnerabilidades en librerías
+        run: npm audit --audit-level=high
+
+      - name: Validar esquema de Base de Datos (Prisma)
+        run: npx prisma validate --schema=server/prisma/schema.prisma
+        
+      - name: Revisar calidad de código y sintaxis (Linter)
+        run: |
+          npm run lint --workspace=client --if-present
+          npm run lint --workspace=server --if-present
+
+      - name: Verificar compilación del Frontend
+        run: npm run build --workspace=client
+
+      - name: Pruebas unitarias del Backend
+        run: npm test --workspace=server --if-present
+
+      - name: Pruebas unitarias del Frontend
+        run: npm test --workspace=client --if-present
+
+      - name: Ejecutar pruebas automáticas de QA
+        run: npm test --workspace=qa --if-present
