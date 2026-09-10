@@ -1,0 +1,17 @@
+{
+    "name": "sistema-administracion-edificio-devunity-root",
+    "private": true,
+    "workspaces": [
+        "client",
+        "server",
+        "qa"
+    ],
+    "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "build": "npm run build --workspace=client"
+    },
+    "devDependencies": {
+        "concurrently": "^10.0.5"
+    }
+    
+}
