@@ -1,15 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9fafb;
+  --foreground: #111827;
 }
 
+/*
+ * Design tokens — Sistema Administración Edificio
+ * Tipografía: TT Interphases Pro, autoalojada vía next/font/local (ver src/app/fonts.ts).
+ * Usa @theme inline porque las variables --font-*-raw se definen en runtime
+ * (className en <html>), no como valores estáticos.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary-50: #e5f0ff;
+  --color-primary-600: #0066ff;
+  --color-primary-700: #0052cc;
+
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-500: #6b7280;
+  --color-neutral-700: #374151;
+  --color-neutral-900: #111827;
+
+  --color-surface-white: #ffffff;
+
+  --color-success-600: #10b981;
+  --color-warning-600: #f59e0b;
+  --color-danger-600: #ef4444;
+  --color-info-600: #3b82f6;
+
+  /* Jerarquía tipográfica — orden: Títulos, Subtítulos, Texto general, Texto secundario */
+  --font-title: var(--font-title-raw);
+  --font-subtitle: var(--font-subtitle-raw);
+  --font-body: var(--font-body-raw);
+  --font-caption: var(--font-caption-raw);
+
+  /* Texto general es el estilo por defecto del sistema */
+  --font-sans: var(--font-body-raw);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +53,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
