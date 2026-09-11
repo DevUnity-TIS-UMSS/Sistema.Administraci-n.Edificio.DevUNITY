@@ -1,0 +1,28 @@
+name: Respaldo Automático Supabase
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 7:00 AM UTC (3:00 AM hora local)
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Permite ejecutar el respaldo con un botón manual si hay emergencia
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar cliente de PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Extraer datos de Supabase
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          FECHA=$(date +'%Y-%m-%d')
+          pg_dump "$SUPABASE_DB_URL" > respaldo_inmobiliaria_$FECHA.sql
+
+      - name: Guardar archivo de respaldo
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-inmobiliaria
+          path: respaldo_inmobiliaria_*.sql
+          retention-days: 30
