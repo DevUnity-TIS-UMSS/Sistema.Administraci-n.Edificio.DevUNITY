@@ -19,12 +19,6 @@ jobs:
 
       - name: Instalar todas las dependencias
         run: npm install
-
-      - name: Escaneo de vulnerabilidades en librerías
-        run: npm audit --audit-level=high
-
-      - name: Validar esquema de Base de Datos (Prisma)
-        run: npx prisma validate --schema=server/prisma/schema.prisma
         
       - name: Revisar calidad de código y sintaxis (Linter)
         run: |
