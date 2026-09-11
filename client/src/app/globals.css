@@ -1,38 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f9fafb;
-  --foreground: #111827;
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
-/*
- * Design tokens — Sistema Administración Edificio
- * Fuente: TT Interphases Pro (pendiente de agregar los .ttf vía @font-face).
- * Mientras tanto se usa el fallback stack definido en el Design System.
- */
-@theme {
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
-  --color-primary-50: #e5f0ff;
-  --color-primary-600: #0066ff;
-  --color-primary-700: #0052cc;
-
-  --color-neutral-50: #f9fafb;
-  --color-neutral-100: #f3f4f6;
-  --color-neutral-300: #d1d5db;
-  --color-neutral-500: #6b7280;
-  --color-neutral-700: #374151;
-  --color-neutral-900: #111827;
-
-  --color-surface-white: #ffffff;
-
-  --color-success-600: #10b981;
-  --color-warning-600: #f59e0b;
-  --color-danger-600: #ef4444;
-  --color-info-600: #3b82f6;
-
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,5 +22,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: Arial, Helvetica, sans-serif;
 }
