@@ -26,6 +26,22 @@ export default function LoginPage() {
   const [strError, setStrError] = useState("");
   const [bolLoading, setBolLoading] = useState(false);
 
+  function handleTestAdminLogin() {
+    localStorage.setItem("token", "token-test-local");
+    localStorage.setItem(
+      "usuario",
+      JSON.stringify({
+        id: "test-admin",
+        nombre: "Admin",
+        apellido: "Test",
+        email: "admin.test@local.dev",
+        rol: "ADMINISTRADOR",
+      } satisfies Usuario)
+    );
+
+    router.push("/admin");
+  }
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -102,8 +118,8 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-[0_1px_2px_rgba(9,9,11,0.04),0_12px_32px_-16px_rgba(9,9,11,0.12)]">
-          <form className="flex flex-col gap-5">
+        <div className="rounded-2xl border border-border bg-card p-8">
+          <form className="flex flex-col gap-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
@@ -116,6 +132,9 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="nombre@empresa.com"
+                value={strEmail}
+                onChange={(event) => setStrEmail(event.target.value)}
+                required
                 className="h-11 rounded-lg border border-input bg-background px-3.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
               />
             </div>
@@ -142,6 +161,9 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 placeholder="••••••••"
+                value={strPassword}
+                onChange={(event) => setStrPassword(event.target.value)}
+                required
                 className="h-11 rounded-lg border border-input bg-background px-3.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
               />
             </div>
@@ -157,7 +179,7 @@ export default function LoginPage() {
 
             {/* Error */}
             {strError && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-600">
+              <div className="rounded-lg border border-destructive/20 bg-danger-subtle px-3 py-2 text-[13px] text-destructive">
                 {strError}
               </div>
             )}
@@ -165,7 +187,8 @@ export default function LoginPage() {
             {/* Botón login */}
             <button
               type="submit"
-              className="mt-1 flex h-11 items-center justify-center rounded-lg bg-primary text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              disabled={bolLoading}
+              className="mt-1 flex h-11 items-center justify-center rounded-lg bg-primary text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {bolLoading
                 ? "Iniciando sesión..."
@@ -189,6 +212,22 @@ export default function LoginPage() {
           >
             Continuar con SSO corporativo
           </button>
+
+          {/* Acceso provisional para desarrollo local — no se muestra en producción */}
+          {process.env.NODE_ENV !== "production" && (
+            <div className="mt-4 rounded-lg border border-dashed border-muted-foreground/30 p-3">
+              <p className="font-caption mb-2 text-center text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-muted-foreground">
+                Solo desarrollo local
+              </p>
+              <button
+                type="button"
+                onClick={handleTestAdminLogin}
+                className="flex h-10 w-full items-center justify-center rounded-lg border border-muted-foreground/30 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted"
+              >
+                Ingresar como admin TEST
+              </button>
+            </div>
+          )}
         </div>
 
         <p className="font-caption mt-6 text-center text-[12px] leading-[1.3] tracking-[0.01em] text-muted-foreground">
