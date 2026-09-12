@@ -18,7 +18,7 @@ jobs:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           FECHA=$(date +'%Y-%m-%d')
-          pg_dump "$SUPABASE_DB_URL" > respaldo_inmobiliaria_$FECHA.sql
+          pg_dump "$SUPABASE_DB_URL" > respaldo_AdminEdificio_$FECHA.sql
 
       - name: Guardar archivo de respaldo
         uses: actions/upload-artifact@v4
