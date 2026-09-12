@@ -76,7 +76,7 @@ const statusStyles: Record<string, string> = {
   Pendiente: "bg-muted text-muted-foreground",
   Vencido: "bg-danger-subtle text-destructive",
 };
-
+/*
 function formatRol(strRol: string) {
   switch (strRol) {
     case "ADMINISTRADOR":
