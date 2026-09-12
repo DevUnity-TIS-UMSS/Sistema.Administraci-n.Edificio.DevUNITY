@@ -16,23 +16,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-primary-50: #e5f0ff;
-  --color-primary-600: #0066ff;
-  --color-primary-700: #0052cc;
-
-  --color-neutral-50: #f9fafb;
-  --color-neutral-100: #f3f4f6;
-  --color-neutral-300: #d1d5db;
-  --color-neutral-500: #6b7280;
-  --color-neutral-700: #374151;
-  --color-neutral-900: #111827;
-
-  --color-surface-white: #ffffff;
-
-  --color-success-600: #10b981;
-  --color-warning-600: #f59e0b;
-  --color-danger-600: #ef4444;
-  --color-info-600: #3b82f6;
+  /* Acentos e indicadores de estado — ver tabla de colores en CLAUDE.md */
+  --color-accent-secondary: #4f46e5;
+  --color-success: #059669;
+  --color-success-subtle: #d1fae5;
+  --color-danger-subtle: #ffe4e6;
 
   /* Jerarquía tipográfica — orden: Títulos, Subtítulos, Texto general, Texto secundario */
   --font-title: var(--font-title-raw);
@@ -88,38 +76,39 @@ body {
  ---break---
  */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Sistema de color oficial — Zinc/Teal/Rose. Ver tabla completa en CLAUDE.md */
+  --background: #f4f4f5; /* zinc-100 — canvas general */
+  --foreground: #09090b; /* zinc-950 — títulos, datos clave, cifras KPI */
+  --card: #ffffff; /* tarjetas, gráficos, celdas de tabla */
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #0d9488; /* teal-600 — botones primarios */
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #09090b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a; /* zinc-500 — subtítulos, labels, headers de columna */
+  --accent: #f4f4f5;
+  --accent-foreground: #09090b;
+  --destructive: #e11d48; /* rose-600 — gastos, morosidad, alertas */
+  --border: #e4e4e7; /* zinc-200 — bordes, divisores */
+  --input: #e4e4e7;
+  --ring: #0d9488;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #18181b; /* zinc-900 — panel de navegación lateral */
+  --sidebar-foreground: #f4f4f5;
+  --sidebar-primary: #0d9488; /* teal-600 — píldora del menú activo */
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #27272a; /* zinc-800 — hover sutil sobre el sidebar oscuro */
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #0d9488;
 }
 /*
  ---break---
