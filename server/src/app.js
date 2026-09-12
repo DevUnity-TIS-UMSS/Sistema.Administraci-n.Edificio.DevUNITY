@@ -8,6 +8,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
 const { manejarErrores } = require("./middlewares/error.middleware");
 const authRoutes = require("./modules/operativo-seguridad/auth/auth.routes");
+const usuariosRoutes = require("./modules/operativo-seguridad/usuarios/usuarios.routes");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/usuarios", usuariosRoutes);
 
 app.use((req, res) => res.status(404).json({ error: "Ruta no encontrada" }));
 app.use(manejarErrores);
