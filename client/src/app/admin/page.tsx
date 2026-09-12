@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 
 interface Usuario {
@@ -107,38 +107,73 @@ function formatRol(strRol: string) {
   }
 }
 
+/**
+ * Obtiene el usuario almacenado en localStorage.
+ */
+function getUsuarioSnapshot(): string | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return localStorage.getItem("usuario");
+}
+
+/**
+ * Snapshot utilizado durante el renderizado del servidor.
+ */
+function getUsuarioServerSnapshot(): string | null {
+  return null;
+}
+
+/**
+ * Permite detectar cambios realizados en localStorage.
+ */
+function subscribeToStorage(
+  callback: () => void
+): () => void {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  window.addEventListener("storage", callback);
+
+  return () => {
+    window.removeEventListener("storage", callback);
+  };
+}
+
 export default function AdminPanelPage() {
   const router = useRouter();
 
-  const [objUsuario, setObjUsuario] = useState<Usuario | null>(null);
-  const [bolLoading, setBolLoading] = useState(true);
+  const strUsuario = useSyncExternalStore(
+    subscribeToStorage,
+    getUsuarioSnapshot,
+    getUsuarioServerSnapshot
+  );
+
+  let objUsuario: Usuario | null = null;
+
+  if (strUsuario) {
+    try {
+      objUsuario = JSON.parse(strUsuario) as Usuario;
+    } catch (error: unknown) {
+      console.error(
+        "Error al leer los datos del usuario:",
+        error
+      );
+    }
+  }
 
   useEffect(() => {
     const strToken = localStorage.getItem("token");
-    const strUsuario = localStorage.getItem("usuario");
 
-    // Si no existe sesión, regresamos al login
     if (!strToken || !strUsuario) {
-      router.replace("/login");
-      return;
-    }
-
-    try {
-      const objUsuarioParseado: Usuario = JSON.parse(strUsuario);
-
-      setObjUsuario(objUsuarioParseado);
-    } catch (error) {
-      console.error("Error al leer los datos del usuario:", error);
-
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
 
       router.replace("/login");
-      return;
-    } finally {
-      setBolLoading(false);
     }
-  }, [router]);
+  }, [strUsuario, router]);
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -147,7 +182,7 @@ export default function AdminPanelPage() {
     router.replace("/login");
   }
 
-  if (bolLoading) {
+  if (!objUsuario) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-neutral-50">
         <div className="text-[14px] text-neutral-500">
@@ -155,10 +190,6 @@ export default function AdminPanelPage() {
         </div>
       </div>
     );
-  }
-
-  if (!objUsuario) {
-    return null;
   }
 
   return (

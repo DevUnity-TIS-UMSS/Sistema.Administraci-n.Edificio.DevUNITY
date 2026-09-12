@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { api } from "@/lib/api";
 
 interface Usuario {
@@ -53,16 +54,26 @@ export default function LoginPage() {
 
       // Redirigimos al dashboard
       router.push("/admin");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error al iniciar sesión:", error);
 
-      if (error.response?.status === 401) {
-        setStrError("Correo o contraseña incorrectos.");
-      } else if (error.response?.status === 403) {
-        setStrError("Tu usuario no tiene acceso al sistema.");
+      if (axios.isAxiosError(error)) {
+        const intStatus = error.response?.status;
+
+        if (intStatus === 401) {
+          setStrError("Correo o contraseña incorrectos.");
+        } else if (intStatus === 403) {
+          setStrError(
+            "Tu usuario no tiene acceso al sistema."
+          );
+        } else {
+          setStrError(
+            "No se pudo conectar con el servidor. Verifica que el backend esté funcionando."
+          );
+        }
       } else {
         setStrError(
-          "No se pudo conectar con el servidor. Verifica que el backend esté funcionando."
+          "Ocurrió un error inesperado. Intenta nuevamente."
         );
       }
     } finally {
@@ -73,6 +84,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-1 items-center justify-center bg-neutral-50 px-4 py-12">
       <div className="w-full max-w-sm">
+
         {/* Marca */}
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-600 text-[15px] font-bold text-white">
@@ -96,6 +108,8 @@ export default function LoginPage() {
             onSubmit={handleLogin}
             className="flex flex-col gap-5"
           >
+
+            {/* Correo */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
@@ -117,6 +131,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* Contraseña */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -147,6 +162,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* Recordarme */}
             <label className="flex items-center gap-2 text-[13px] leading-[1.4] text-neutral-700">
               <input
                 type="checkbox"
@@ -163,6 +179,7 @@ export default function LoginPage() {
               </div>
             )}
 
+            {/* Botón login */}
             <button
               type="submit"
               disabled={bolLoading}
@@ -174,6 +191,7 @@ export default function LoginPage() {
             </button>
           </form>
 
+          {/* Separador */}
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-neutral-100" />
 
@@ -184,6 +202,7 @@ export default function LoginPage() {
             <div className="h-px flex-1 bg-neutral-100" />
           </div>
 
+          {/* SSO */}
           <button
             type="button"
             className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-neutral-300 text-[14px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
@@ -192,6 +211,7 @@ export default function LoginPage() {
           </button>
         </div>
 
+        {/* Contacto */}
         <p className="font-caption mt-6 text-center text-[12px] leading-[1.3] tracking-[0.01em] text-neutral-500">
           ¿No tienes una cuenta?{" "}
           <a
