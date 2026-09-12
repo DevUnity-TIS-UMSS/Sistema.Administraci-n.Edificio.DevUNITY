@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Referencia al módulo Operativo (Back 2) — se sincroniza cuando compartan el schema real
+model Departamento {
+  id            String    @id @default(uuid())
+  numero        String
+  propietarioId String?
+  expensas      Expensa[]
+
+  @@map("departamentos")
+}
+
+model Expensa {
+  id                String   @id @default(uuid())
+  departamentoId    String
+  departamento      Departamento @relation(fields: [departamentoId], references: [id])
+  periodo           String   // ej "2026-09"
+  montoBase         Decimal  @db.Decimal(10, 2)
+  montoMora         Decimal  @default(0) @db.Decimal(10, 2)
+  fechaVencimiento  DateTime
+  estado            String   @default("pendiente") // pendiente | pagado | vencido
+  pagos             Pago[]
+  createdAt         DateTime @default(now())
+
+  @@map("expensas")
+}
+
+model Pago {
+  id              String   @id @default(uuid())
+  expensaId       String
+  expensa         Expensa  @relation(fields: [expensaId], references: [id])
+  cuentaId        String
+  cuenta          CuentaBancaria @relation(fields: [cuentaId], references: [id])
+  monto           Decimal  @db.Decimal(10, 2)
+  fechaPago       DateTime @default(now())
+  metodoPago      String   // efectivo | transferencia | qr
+  tipo            String   // pago | anticipo
+  comprobanteUrl  String?
+
+  @@map("pagos")
+}
+
+model CuentaBancaria {
+  id           String   @id @default(uuid())
+  nombre       String
+  tipo         String   // caja | banco
+  saldoActual  Decimal  @default(0) @db.Decimal(10, 2)
+  pagos        Pago[]
+  movimientos  MovimientoCaja[]
+
+  @@map("cuentas_bancarias")
+}
+
+model MovimientoCaja {
+  id          String   @id @default(uuid())
+  cuentaId    String
+  cuenta      CuentaBancaria @relation(fields: [cuentaId], references: [id])
+  tipo        String   // ingreso | egreso
+  monto       Decimal  @db.Decimal(10, 2)
+  concepto    String
+  categoria   String?
+  fecha       DateTime @default(now())
+
+  @@map("movimientos_caja")
+}
