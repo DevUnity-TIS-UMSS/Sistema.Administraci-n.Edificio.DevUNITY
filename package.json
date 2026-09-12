@@ -1,15 +1,17 @@
 {
-  "name": "sistema.administraci-n.edificio.devunity",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "cypress": "^15.21.1"
-  }
+    "name": "sistema-administracion-edificio-devunity-root",
+    "private": true,
+    "workspaces": [
+        "client",
+        "server",
+        "qa"
+    ],
+    "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "build": "npm run build --workspace=client"
+    },
+    "devDependencies": {
+        "concurrently": "^10.0.5"
+    }
+    
 }
