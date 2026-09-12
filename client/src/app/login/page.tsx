@@ -1,13 +1,96 @@
-// Pantalla estática de referencia visual — sin lógica de autenticación conectada.
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { api } from "@/lib/api";
+
+interface Usuario {
+  id: string;
+  nombre: string;
+  apellido: string;
+  email: string;
+  rol: string;
+}
+
+interface LoginResponse {
+  token: string;
+  usuario: Usuario;
+}
+
 export default function LoginPage() {
+  const router = useRouter();
+
+  const [strEmail, setStrEmail] = useState("");
+  const [strPassword, setStrPassword] = useState("");
+  const [strError, setStrError] = useState("");
+  const [bolLoading, setBolLoading] = useState(false);
+
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setStrError("");
+    setBolLoading(true);
+
+    try {
+      const response = await api.post<LoginResponse>(
+        "/auth/login",
+        {
+          email: strEmail,
+          password: strPassword,
+        }
+      );
+
+      const { token, usuario } = response.data;
+
+      // Guardamos el JWT
+      localStorage.setItem("token", token);
+
+      // Guardamos los datos del usuario
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify(usuario)
+      );
+
+      // Redirigimos al dashboard
+      router.push("/admin");
+    } catch (error: unknown) {
+      console.error("Error al iniciar sesión:", error);
+
+      if (axios.isAxiosError(error)) {
+        const intStatus = error.response?.status;
+
+        if (intStatus === 401) {
+          setStrError("Correo o contraseña incorrectos.");
+        } else if (intStatus === 403) {
+          setStrError(
+            "Tu usuario no tiene acceso al sistema."
+          );
+        } else {
+          setStrError(
+            "No se pudo conectar con el servidor. Verifica que el backend esté funcionando."
+          );
+        }
+      } else {
+        setStrError(
+          "Ocurrió un error inesperado. Intenta nuevamente."
+        );
+      }
+    } finally {
+      setBolLoading(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-1 items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-sm">
+
         {/* Marca */}
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-[15px] font-bold text-primary-foreground">
             E
           </div>
+
           <div>
             <h1 className="font-title text-[22px] font-bold leading-[1.2] tracking-[-0.015em] text-foreground">
               Bienvenido de nuevo
@@ -28,6 +111,7 @@ export default function LoginPage() {
               >
                 Correo electrónico
               </label>
+
               <input
                 id="email"
                 type="email"
@@ -36,6 +120,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* Contraseña */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -44,6 +129,7 @@ export default function LoginPage() {
                 >
                   Contraseña
                 </label>
+
                 <a
                   href="#"
                   className="font-caption text-[12px] leading-[1.3] tracking-[0.01em] text-primary hover:text-primary/80"
@@ -51,6 +137,7 @@ export default function LoginPage() {
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
+
               <input
                 id="password"
                 type="password"
@@ -64,17 +151,29 @@ export default function LoginPage() {
                 type="checkbox"
                 className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
               />
+
               Recordarme en este dispositivo
             </label>
 
+            {/* Error */}
+            {strError && (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-600">
+                {strError}
+              </div>
+            )}
+
+            {/* Botón login */}
             <button
               type="submit"
               className="mt-1 flex h-11 items-center justify-center rounded-lg bg-primary text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Iniciar sesión
+              {bolLoading
+                ? "Iniciando sesión..."
+                : "Iniciar sesión"}
             </button>
           </form>
 
+          {/* Separador */}
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
             <span className="font-caption text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-muted-foreground">
@@ -83,6 +182,7 @@ export default function LoginPage() {
             <div className="h-px flex-1 bg-border" />
           </div>
 
+          {/* SSO */}
           <button
             type="button"
             className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-input text-[14px] font-medium text-foreground transition-colors hover:bg-muted"
