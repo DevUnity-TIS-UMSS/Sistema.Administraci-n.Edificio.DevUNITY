@@ -26,6 +26,22 @@ export default function LoginPage() {
   const [strError, setStrError] = useState("");
   const [bolLoading, setBolLoading] = useState(false);
 
+  function handleTestAdminLogin() {
+    localStorage.setItem("token", "token-test-local");
+    localStorage.setItem(
+      "usuario",
+      JSON.stringify({
+        id: "test-admin",
+        nombre: "Admin",
+        apellido: "Test",
+        email: "admin.test@local.dev",
+        rol: "ADMINISTRADOR",
+      } satisfies Usuario)
+    );
+
+    router.push("/admin");
+  }
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -34,12 +50,12 @@ export default function LoginPage() {
 
     try {
       const response = await api.post<LoginResponse>(
-        "/auth/login",
+        "/auth/login", 
         {
-          email: strEmail,
-          password: strPassword,
-        }
-      );
+        email: strEmail,
+        password: strPassword,
+      }
+    );
 
       const { token, usuario } = response.data;
 
@@ -48,7 +64,7 @@ export default function LoginPage() {
 
       // Guardamos los datos del usuario
       localStorage.setItem(
-        "usuario",
+        "usuario", 
         JSON.stringify(usuario)
       );
 
@@ -63,6 +79,8 @@ export default function LoginPage() {
         if (intStatus === 401) {
           setStrError("Correo o contraseña incorrectos.");
         } else if (intStatus === 403) {
+          setStrError("Tu usuario no tiene acceso al sistema.");
+        } else if (intStatus === 500) {
           setStrError(
             "Tu usuario no tiene acceso al sistema."
           );
@@ -82,38 +100,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-1 items-center justify-center bg-neutral-50 px-4 py-12">
+    <div className="flex min-h-screen flex-1 items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-sm">
 
         {/* Marca */}
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-600 text-[15px] font-bold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-[15px] font-bold text-primary-foreground">
             E
           </div>
 
           <div>
-            <h1 className="font-title text-[22px] font-bold leading-[1.2] tracking-[-0.015em] text-neutral-900">
+            <h1 className="font-title text-[22px] font-bold leading-[1.2] tracking-[-0.015em] text-foreground">
               Bienvenido de nuevo
             </h1>
-
-            <p className="font-subtitle mt-1 text-[14px] font-semibold leading-[1.3] tracking-[-0.005em] text-neutral-500">
+            <p className="font-subtitle mt-1 text-[14px] font-semibold leading-[1.3] tracking-[-0.005em] text-muted-foreground">
               Ingresa tus credenciales para acceder al panel
             </p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-neutral-100 bg-surface-white p-8 shadow-[0_1px_2px_rgba(17,24,39,0.04),0_12px_32px_-16px_rgba(17,24,39,0.12)]">
-          <form
-            onSubmit={handleLogin}
-            className="flex flex-col gap-5"
-          >
-
-            {/* Correo */}
+        <div className="rounded-2xl border border-border bg-card p-8">
+          <form className="flex flex-col gap-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
-                className="text-[13px] font-medium leading-[1.3] tracking-[-0.005em] text-neutral-700"
+                className="text-[13px] font-medium leading-[1.3] tracking-[-0.005em] text-foreground"
               >
                 Correo electrónico
               </label>
@@ -123,11 +135,9 @@ export default function LoginPage() {
                 type="email"
                 placeholder="nombre@empresa.com"
                 value={strEmail}
-                onChange={(event) =>
-                  setStrEmail(event.target.value)
-                }
+                onChange={(event) => setStrEmail(event.target.value)}
                 required
-                className="h-11 rounded-lg border border-neutral-300 bg-surface-white px-3.5 text-[14px] text-neutral-900 outline-none transition-colors placeholder:text-neutral-500 focus:border-primary-600 focus:ring-4 focus:ring-primary-50"
+                className="h-11 rounded-lg border border-input bg-background px-3.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
               />
             </div>
 
@@ -136,14 +146,14 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-[13px] font-medium leading-[1.3] tracking-[-0.005em] text-neutral-700"
+                  className="text-[13px] font-medium leading-[1.3] tracking-[-0.005em] text-foreground"
                 >
                   Contraseña
                 </label>
 
                 <a
                   href="#"
-                  className="font-caption text-[12px] leading-[1.3] tracking-[0.01em] text-primary-600 hover:text-primary-700"
+                  className="font-caption text-[12px] leading-[1.3] tracking-[0.01em] text-primary hover:text-primary/80"
                 >
                   ¿Olvidaste tu contraseña?
                 </a>
@@ -154,19 +164,17 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 value={strPassword}
-                onChange={(event) =>
-                  setStrPassword(event.target.value)
-                }
+                onChange={(event) => setStrPassword(event.target.value)}
                 required
-                className="h-11 rounded-lg border border-neutral-300 bg-surface-white px-3.5 text-[14px] text-neutral-900 outline-none transition-colors placeholder:text-neutral-500 focus:border-primary-600 focus:ring-4 focus:ring-primary-50"
+                className="h-11 rounded-lg border border-input bg-background px-3.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
               />
             </div>
 
             {/* Recordarme */}
-            <label className="flex items-center gap-2 text-[13px] leading-[1.4] text-neutral-700">
+            <label className="flex items-center gap-2 text-[13px] leading-[1.4] text-foreground">
               <input
                 type="checkbox"
-                className="h-4 w-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-600"
+                className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
               />
 
               Recordarme en este dispositivo
@@ -174,7 +182,7 @@ export default function LoginPage() {
 
             {/* Error */}
             {strError && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-600">
+              <div className="rounded-lg border border-destructive/20 bg-danger-subtle px-3 py-2 text-[13px] text-destructive">
                 {strError}
               </div>
             )}
@@ -183,7 +191,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={bolLoading}
-              className="mt-1 flex h-11 items-center justify-center rounded-lg bg-primary-600 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-1 flex h-11 items-center justify-center rounded-lg bg-primary text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {bolLoading
                 ? "Iniciando sesión..."
@@ -193,30 +201,46 @@ export default function LoginPage() {
 
           {/* Separador */}
           <div className="my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-neutral-100" />
+            <div className="h-px flex-1 bg-border" />
 
-            <span className="font-caption text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-neutral-500">
+            <span className="font-caption text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-muted-foreground">
               o continúa con
             </span>
 
-            <div className="h-px flex-1 bg-neutral-100" />
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           {/* SSO */}
           <button
             type="button"
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-neutral-300 text-[14px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-input text-[14px] font-medium text-foreground transition-colors hover:bg-muted"
           >
             Continuar con SSO corporativo
           </button>
+
+          {/* Acceso provisional para desarrollo local — no se muestra en producción */}
+          {process.env.NODE_ENV !== "production" && (
+            <div className="mt-4 rounded-lg border border-dashed border-muted-foreground/30 p-3">
+              <p className="font-caption mb-2 text-center text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-muted-foreground">
+                Solo desarrollo local
+              </p>
+              <button
+                type="button"
+                onClick={handleTestAdminLogin}
+                className="flex h-10 w-full items-center justify-center rounded-lg border border-muted-foreground/30 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted"
+              >
+                Ingresar como admin TEST
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Contacto */}
-        <p className="font-caption mt-6 text-center text-[12px] leading-[1.3] tracking-[0.01em] text-neutral-500">
+        {/* Registro */}
+        <p className="font-caption mt-6 text-center text-[12px] leading-[1.3] tracking-[0.01em] text-muted-foreground">
           ¿No tienes una cuenta?{" "}
           <a
             href="#"
-            className="font-medium text-primary-600 hover:text-primary-700"
+            className="font-medium text-primary hover:text-primary/80"
           >
             Contacta a tu administrador
           </a>
