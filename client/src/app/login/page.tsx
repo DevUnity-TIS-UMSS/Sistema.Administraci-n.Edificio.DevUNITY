@@ -50,12 +50,12 @@ export default function LoginPage() {
 
     try {
       const response = await api.post<LoginResponse>(
-        "/auth/login",
+        "/auth/login", 
         {
-          email: strEmail,
-          password: strPassword,
-        }
-      );
+        email: strEmail,
+        password: strPassword,
+      }
+    );
 
       const { token, usuario } = response.data;
 
@@ -64,7 +64,7 @@ export default function LoginPage() {
 
       // Guardamos los datos del usuario
       localStorage.setItem(
-        "usuario",
+        "usuario", 
         JSON.stringify(usuario)
       );
 
@@ -79,6 +79,8 @@ export default function LoginPage() {
         if (intStatus === 401) {
           setStrError("Correo o contraseña incorrectos.");
         } else if (intStatus === 403) {
+          setStrError("Tu usuario no tiene acceso al sistema.");
+        } else if (intStatus === 500) {
           setStrError(
             "Tu usuario no tiene acceso al sistema."
           );
@@ -168,6 +170,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* Recordarme */}
             <label className="flex items-center gap-2 text-[13px] leading-[1.4] text-foreground">
               <input
                 type="checkbox"
@@ -199,9 +202,11 @@ export default function LoginPage() {
           {/* Separador */}
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
+
             <span className="font-caption text-[11px] uppercase leading-[1.3] tracking-[0.01em] text-muted-foreground">
               o continúa con
             </span>
+
             <div className="h-px flex-1 bg-border" />
           </div>
 
@@ -230,9 +235,13 @@ export default function LoginPage() {
           )}
         </div>
 
+        {/* Registro */}
         <p className="font-caption mt-6 text-center text-[12px] leading-[1.3] tracking-[0.01em] text-muted-foreground">
           ¿No tienes una cuenta?{" "}
-          <a href="#" className="font-medium text-primary hover:text-primary/80">
+          <a
+            href="#"
+            className="font-medium text-primary hover:text-primary/80"
+          >
             Contacta a tu administrador
           </a>
         </p>
