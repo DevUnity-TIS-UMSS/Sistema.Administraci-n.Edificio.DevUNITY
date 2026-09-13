@@ -11,7 +11,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${fontTitle.variable} ${fontSubtitle.variable} ${fontBody.variable} ${fontCaption.variable} h-full antialiased`}
+      className={`dark ${fontTitle.variable} ${fontSubtitle.variable} ${fontBody.variable} ${fontCaption.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
