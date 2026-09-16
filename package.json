@@ -7,11 +7,12 @@
         "qa"
     ],
     "scripts": {
-        "dev": "concurrently "npm run dev --workspace=server" "npm run dev --workspace=client"",
-        "build": "npm run build --workspace=client",
-        "postinstall": "npm --prefix server run prisma:generate"
+    "dev": "concurrently "npm run dev --workspace=server" "npm run dev --workspace=client"",
+    "build": "npm run build --workspace=client",
+    "postinstall": "npm run prisma:generate --workspace=server"
     },
     "devDependencies": {
         "concurrently": "^10.0.5"
     }
+
 }
